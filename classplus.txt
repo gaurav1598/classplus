@@ -1,0 +1,65 @@
+#include <bits/stdc++.h>
+#define fast ios_base::sync_with_stdio(false), cin.tie(nullptr), cout.tie(nullptr);
+#define mm INT_MAX
+using namespace std;
+vector<vector<int>> dist;
+int main()
+{
+	int n,h,x,u,v;
+	cin>>n>>h>>x;
+	dist.resize(n+1);
+	for(int i=0;i<=n;i++)
+	{
+		dist[i].resize(n+1);
+	}
+	vector<int> infectedCity(h);
+	for(int i=0;i<h;i++)
+	cin>>infectedCity[i];
+	for(int i=0;i<=n;i++)
+	{
+		for(int j=0;j<=n;j++)
+		dist[i][j]=mm;
+	}
+	
+	for(int i=1;i<n;i++)
+	{
+		cin>>u>>v;
+		dist[u][v]=dist[v][u]=min(dist[u][v],1);
+	}
+	for(int k=1;k<=n;k++)
+	{
+		for(int i=1;i<=n;i++)
+		{
+			if(dist[i][k]==mm)
+			continue;
+			for(int j=1;j<=n;j++)
+			{
+			    if(dist[k][j]==mm || i==k|| j==k)
+			     continue;
+			    if(i==j)
+			    dist[i][j]=0;
+			    else
+			    dist[i][j]=min(dist[i][j],dist[i][k]+dist[k][j]);	
+			}
+		}
+	}
+	
+	int ans=0;
+	for(int i=1;i<=n;i++)
+	{
+		bool isPossible=true;
+		for(int j=0;j<h;j++)
+		{
+			v=infectedCity[j];
+			
+			if(dist[i][v]>x)
+			{
+				isPossible=false;
+				break;
+			}
+		}
+		if(isPossible)
+		ans++;
+	}
+	cout<<ans;
+}
